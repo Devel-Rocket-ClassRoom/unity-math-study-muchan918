@@ -36,6 +36,11 @@ public class Assignment_DirectionAlert : MonoBehaviour
     [Range(1f, 30f)]
     [SerializeField] private float alertRange = 15f;
 
+    [Header("=== 전 후방 설정 ===")]
+    [Tooltip("적 감지 반경")]
+    [Range(0.05f, 5f)]
+    [SerializeField] private float sideThreshold = 0.3f;
+
     [Header("=== UI 연결 ===")]
     [Tooltip("정보 표시용 TMP_Text (Canvas 하위에 배치)")]
     [SerializeField] private TMP_Text uiInfoText;
@@ -79,35 +84,55 @@ public class Assignment_DirectionAlert : MonoBehaviour
     private Direction GetDirection(Transform enemy)
     {
         Vector3 toTarget = enemy.position - transform.position;
-        float threshold = 0.1f;
-
-        if (toTarget.magnitude > alertRange && toTarget.magnitude < threshold)
+        toTarget.y = 0f;
+        if (toTarget == Vector3.zero)
+        {
             return Direction.None;
+        }
 
         Vector3 toTargetNorm = toTarget.normalized;
         Vector3 crossProduct = Vector3.Cross(transform.forward, toTargetNorm);
         float dotProductValue = Vector3.Dot(transform.forward, toTargetNorm);
 
-        if (dotProductValue > Mathf.Cos(45 * Mathf.Deg2Rad))
+        if (Mathf.Abs(crossProduct.y) > sideThreshold)
         {
-            return Direction.Front;
+            return crossProduct.y > 0 ? Direction.Right : Direction.Left;
         }
-        else if (dotProductValue < Mathf.Cos(135 * Mathf.Deg2Rad))
-        {
-            return Direction.Back;
-        }
-        else if (crossProduct.y > threshold)
-        {
-            return Direction.Right;
-        }
-        else if (crossProduct.y < -threshold)
-        {
-            return Direction.Left;
-        }
-        else
-        {
-            return Direction.None;
-        }
+
+        return dotProductValue > 0 ? Direction.Front : Direction.Back;
+
+
+        // return Direction.None;
+
+        // float threshold = 0.1f;
+
+        // if (toTarget.magnitude > alertRange && toTarget.magnitude < threshold)
+        //     return Direction.None;
+
+        // Vector3 toTargetNorm = toTarget.normalized;
+        // Vector3 crossProduct = Vector3.Cross(transform.forward, toTargetNorm);
+        // float dotProductValue = Vector3.Dot(transform.forward, toTargetNorm);
+
+        // if (dotProductValue > Mathf.Cos(45 * Mathf.Deg2Rad))
+        // {
+        //     return Direction.Front;
+        // }
+        // else if (dotProductValue < Mathf.Cos(135 * Mathf.Deg2Rad))
+        // {
+        //     return Direction.Back;
+        // }
+        // else if (crossProduct.y > threshold)
+        // {
+        //     return Direction.Right;
+        // }
+        // else if (crossProduct.y < -threshold)
+        // {
+        //     return Direction.Left;
+        // }
+        // else
+        // {
+        //     return Direction.None;
+        // }
     }
 
     private void OnDrawGizmos()
