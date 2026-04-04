@@ -101,10 +101,10 @@ public class Assignment_BulletHell : MonoBehaviour
     private Vector3 CalculateSpiralDirection(int index, int total)
     {
         // TODO
-        float spiralOffset = spiralTurnSpeed * Time.time;
+        float spiralOffset = spiralTurnSpeed * Time.time % 360;
 
-        float angle = 360f / total * index + spiralOffset;
-        float angleRadians = angle * Mathf.Deg2Rad;
+        float angle = 360f / total * index;
+        float angleRadians = (angle + spiralOffset) * Mathf.Deg2Rad;
 
         return new Vector3(Mathf.Cos(angleRadians), 0f, Mathf.Sin(angleRadians));
     }
@@ -112,7 +112,10 @@ public class Assignment_BulletHell : MonoBehaviour
     private Vector3 CalculateFanDirection(int index, int total)
     {
         // TODO
-        return Vector3.forward;
+        float angle = fanAngle / total * index;
+        float angleRadians = angle * Mathf.Deg2Rad;
+
+        return new Vector3(Mathf.Cos(angleRadians), 0f, Mathf.Sin(angleRadians));
     }
 
     private void UpdateDebugUI()
