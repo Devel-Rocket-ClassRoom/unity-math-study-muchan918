@@ -45,10 +45,9 @@ public class Assignment_RotationTrail : MonoBehaviour
     private void Update()
     {
         // TODO
-
         if (autoRotate)
         {
-            rotationAngle = rotationSpeed * Time.time;
+            rotationAngle = rotationSpeed * Time.time % 360;
         }
 
         Matrix4x4 T = Matrix4x4.Translate(transform.position);
@@ -61,7 +60,7 @@ public class Assignment_RotationTrail : MonoBehaviour
         lastTipPos = TRS.MultiplyPoint(armOffset);
 
         trailPositions.Add(lastTipPos);
-        if (trailPositions.Count > trailLength)
+        while (trailPositions.Count > trailLength)
             trailPositions.RemoveAt(0);
 
         UpdateUI();
