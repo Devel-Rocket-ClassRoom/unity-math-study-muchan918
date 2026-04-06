@@ -54,23 +54,43 @@ public class Assignment_PlanetOrbit : MonoBehaviour
         float planetAngle = planetOrbitSpeed * Time.time;
         float satelliteAngle = satelliteOrbitSpeed * Time.time;
 
-        Matrix4x4 T = Matrix4x4.Translate(orbitCenter);
-        Matrix4x4 R = Matrix4x4.Rotate(Quaternion.Euler(0f, planetAngle, 0f));
-        Matrix4x4 S = Matrix4x4.Scale(Vector3.one);
+        Matrix4x4 planetOrbitMatrix = Matrix4x4.TRS(
+            orbitCenter,
+            Quaternion.Euler(0f, planetAngle, 0f),
+            Vector3.one
+        );
 
-        Matrix4x4 planetOrbitTRS = T * R * S;
+        planetWorldPos = planetOrbitMatrix.MultiplyPoint(new Vector3(planetOrbitRadius, 0f, 0f));
 
-        Vector3 planetOffset = new Vector3(planetOrbitRadius, 0f, 0f);
-        planetWorldPos = planetOrbitTRS.MultiplyPoint(planetOffset);
+        Matrix4x4 satelliteOrbitMatrix = Matrix4x4.TRS(
+            planetWorldPos,
+            Quaternion.Euler(0f, satelliteAngle, 0f),
+            Vector3.one
+        );
+
         transform.position = planetWorldPos;
-
-        Matrix4x4 T2 = Matrix4x4.Translate(planetWorldPos);
-        Matrix4x4 R2 = Matrix4x4.Rotate(Quaternion.Euler(0f, satelliteAngle, 0f));
-
-        Matrix4x4 satelliteOrbitTRS = T2 * R2 * S;
-        satelliteLocalPos = new Vector3(satelliteOrbitRadius, 0f, 0f);
-        satelliteWorldPos = satelliteOrbitTRS.MultiplyPoint(satelliteLocalPos);
         satellite.position = satelliteWorldPos;
+        satelliteWorldPos = satelliteOrbitMatrix.MultiplyPoint(new Vector3(satelliteOrbitRadius, 0f, 0f));
+        satelliteLocalPos = satellite.localPosition;
+
+
+        // Matrix4x4 T = Matrix4x4.Translate(orbitCenter);
+        // Matrix4x4 R = Matrix4x4.Rotate(Quaternion.Euler(0f, planetAngle, 0f));
+        // Matrix4x4 S = Matrix4x4.Scale(Vector3.one);
+
+        // Matrix4x4 planetOrbitTRS = T * R * S;
+
+        // Vector3 planetOffset = new Vector3(planetOrbitRadius, 0f, 0f);
+        // planetWorldPos = planetOrbitTRS.MultiplyPoint(planetOffset);
+        // transform.position = planetWorldPos;
+
+        // Matrix4x4 T2 = Matrix4x4.Translate(planetWorldPos);
+        // Matrix4x4 R2 = Matrix4x4.Rotate(Quaternion.Euler(0f, satelliteAngle, 0f));
+
+        // Matrix4x4 satelliteOrbitTRS = T2 * R2 * S;
+        // satelliteLocalPos = new Vector3(satelliteOrbitRadius, 0f, 0f);
+        // satelliteWorldPos = satelliteOrbitTRS.MultiplyPoint(satelliteLocalPos);
+        // satellite.position = satelliteWorldPos;
 
         UpdateUI();
     }
