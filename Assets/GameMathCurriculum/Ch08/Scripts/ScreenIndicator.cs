@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class ScreenIndicator : MonoBehaviour
 {
@@ -30,16 +29,22 @@ public class ScreenIndicator : MonoBehaviour
 
             if (screenCoord.z < 0)
             {
+                // 화면 중심 기준으로 명시적으로 반전
+                float flippedX = Screen.width - screenCoord.x;
+                float flippedY = Screen.height - screenCoord.y;
+
                 cubes[i].ShowImage(new Vector2(
-                Mathf.Clamp(-screenCoord.x, 10f, cam.pixelWidth - 10),
-                Mathf.Clamp(-screenCoord.y, 10f, cam.pixelHeight - 10)));
+                    Mathf.Clamp(flippedX, 10f, Screen.width - 10f),
+                    Mathf.Clamp(flippedY, 10f, Screen.height - 10f)
+                ));
             }
             else if (ndcCoord.x > 1 || ndcCoord.x < -1 ||
                 ndcCoord.y > 1 || ndcCoord.y < -1)
             {
                 cubes[i].ShowImage(new Vector2(
-                    Mathf.Clamp(screenCoord.x, 10f, cam.pixelWidth - 10),
-                    Mathf.Clamp(screenCoord.y, 10f, cam.pixelHeight - 10)));
+                    Mathf.Clamp(screenCoord.x, 10f, Screen.width - 10f),
+                    Mathf.Clamp(screenCoord.y, 10f, Screen.height - 10f)
+                ));
             }
             else
             {

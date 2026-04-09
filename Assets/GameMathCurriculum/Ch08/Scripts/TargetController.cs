@@ -16,24 +16,23 @@ public class TargetController : MonoBehaviour
     {
         if (isReturn)
         {
-            transform.position = Vector3.Lerp(
+            Vector3 newPos = Vector3.Lerp(
                 transform.position,
                 originPosition,
                 returnSpeed * Time.deltaTime
             );
 
-            Vector3 newPos = new Vector3(
-            transform.position.x,
-            terrain.SampleHeight(transform.position) + 3f,
-            transform.position.z
-            );
+            newPos.y = terrain.SampleHeight(newPos) + 3f;
 
             transform.position = newPos;
         }
 
-        if (Vector3.Distance(transform.position, originPosition) < 0.1f)
+        if (Mathf.Abs(transform.position.x - originPosition.x) < 0.3f
+            && Mathf.Abs(transform.position.z - originPosition.z) < 0.3f)
         {
             isReturn = false;
+            Debug.Log("반납 끝");
+            transform.position = originPosition;
         }
     }
 }
