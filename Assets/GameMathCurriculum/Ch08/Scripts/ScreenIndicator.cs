@@ -19,7 +19,7 @@ public class ScreenIndicator : MonoBehaviour
         cubesCount = cubes.Length;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         for (int i = 0; i < cubesCount; i++)
         {
