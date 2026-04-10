@@ -9,7 +9,7 @@ public class TargetController : MonoBehaviour
 
     private void Start()
     {
-        returnSpeed = 5f;
+        returnSpeed = 0.1f;
     }
 
     private void Update()
